@@ -1,7 +1,7 @@
 # amount_list: a list including all amount of a category 
 # target: amount that should equal
 # skip: number that this category should skip
-def amount_pathfinding(amount_list: list, target: int, skip: int) -> list:
+def amount_pathfinding(amount_list: list, target: int, skip: int=0) -> list:
     path_list = {}
     for amount in amount_list:
 

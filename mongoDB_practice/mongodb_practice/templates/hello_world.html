@@ -1,0 +1,56 @@
+<!-- hello_world.html -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hello World</title>
+        <style>
+            body {
+               background-color: lightyellow;
+            }
+            em {
+                color: LightSeaGreen;
+            }
+        </style>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script>
+        $(document).ready(function() {
+            $(".submit").click(function() {
+                $.ajax({
+                url : "/hello",
+                type: "get",
+                dataType: "json",
+                data : $(".form").serialize(),
+                success:function(data){
+
+                    $(".rst").html(JSON.stringify(data));
+                }
+                })
+             })
+
+        });
+
+
+        </script>
+    </head>
+    <body>
+        <h1>Hello World!</h1>
+        <form action="/hello" method="get" class="form">
+            Amount:<input type="number" name="Amount"><br>
+            A:<input type="number" name="A"><br>
+            B:<input type="number" name="B"><br>
+            C:<input type="number" name="C"><br>
+            D:<input type="number" name="D"><br>
+
+            <button type="button" class="submit">submit</button>
+        </form>
+
+        <p>RESULT:</p>
+        <div class="rst">
+
+
+        </div>
+
+    </body>
+</html>

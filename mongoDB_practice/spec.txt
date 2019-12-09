@@ -1,0 +1,91 @@
+﻿mongodb 中的資料建置，
+過程留下 mongo shell (https://docs.mongodb.com/manual/mongo/) 的 js
+1. 建立一個 item 的 collection
+2. item 的 schema 為 { _id : ObjectId, category : String, amount : Integer }
+3. 插入1000 個 item，_id 由 mongodb 自動產生， category 為隨機的 A~D， amount 為隨機的 1~10
+
+
+web api：
+可接收四個參數
+* amount : Int (必需)
+* a : Int (選擇性)
+* b : Int (選擇性)
+* c : Int (選擇性)
+依 amount 的限制(大於等於各 item.amount 的加總)，回傳各 category 的可能個數
+
+
+舉例：
+item collection 中有
+{category : A, amount : 2}
+{category : A, amount : 2}
+{category : A, amount : 3}
+{category : B, amount : 1}
+{category : B, amount : 3}
+{category : B, amount : 4}
+{category : C, amount : 2}
+{category : C, amount : 3}
+{category : C, amount : 5}
+{category : D, amount : 2}
+{category : D, amount : 4}
+{category : D, amount : 5}
+
+
+api 傳入 amount = 5
+回傳：
+A = [1,2]   
+ // 1 {category : A, amount : 2} 或 {category : A, amount : 3}
+  // 2 {category : A, amount : 2} + {category : A, amount : 2} 
+        或  {category : A, amount : 2} + {category : A, amount : 3} 
+B = [1,2]   
+  // 1 {category : B, amount : 1} 或 {category : B, amount : 3} 或 {category : B, amount : 4}
+  // 2 {category : B, amount : 1} + {category : B, amount : 3} 
+       或 {category : B, amount : 1} + {category : B, amount : 4}
+C = [1,2]
+ // 1 {category : C, amount : 1} 或 {category : C, amount : 3} 或 {category : C, amount : 5} 
+  // 2 {category : C, amount : 2} + {category : C, amount : 3}
+D = [1]  
+  // 1 {category : D, amount : 2} 或 {category : D, amount : 4} 或 {category : D, amount : 5}
+
+
+api 傳入 amount = 10 & a = 2 
+這時需要先排除 category : A 可能的 amount 總數
+a = 2 的可能組合
+{category : A, amount : 2} + {category : A, amount : 2} ， amount = 4
+{category : A, amount : 2} + {category : A, amount : 3} ， amount = 5
+回傳：
+B = [1,2]
+ // 1 {category : B, amount : 1} 或 {category : B, amount : 3} 或 {category : B, amount : 4}
+  // 2 {category : B, amount : 1} + {category : B, amount : 3} 
+       或 {category : B, amount : 1} + {category : B, amount : 4}
+C = [1,2]
+ // 1 {category : C, amount : 1} 或 {category : C, amount : 3} 或 {category : C, amount : 5} 
+  // 2 {category : C, amount : 2} + {category : C, amount : 3}
+D = [1,2]
+  // 1 {category : D, amount : 2} 或 {category : D, amount : 4} 或 {category : D, amount : 5}
+  // 2 {category : D, amount : 2} + {category : D, amount : 4} 配合到 A 的 amount 總合為 4 時
+
+
+加上 b、c 參數時，和 a 一樣，需考慮所有可能的 amount 總合，來找出沒傳入 category 的可能組合個數。
+
+
+
+
+web api 可自由使用偏好的語言及框架， db 限制為 mongodb。
+因為 mongodb 未來必用，
+所以想借這次測試，讓你先行體驗一下，
+db 中的 collection 可自行依需要增加。
+
+
+code 的部份麻煩你 commit 到自已的 github 上，
+可以的話，希望不要是一次性的 commit，
+因為我們主要基本都是在看寫時 code 的演化過程，
+而不止是看最後的結果，
+另外執行時的效能也是是評分的項目之一。
+
+
+完成後 web api 的部份用 dockerfile 打包上傳到自已的 docker hub (https://hub.docker.com/)
+
+
+預計時數 4 工作天，時限是一個月(1/13前)，包含 mongodb 學習時間，
+建議先用簡單的方式實作，接著再優化效能和演算法，
+時限到時沒有完成也不要緊，一樣能夠提交作業。
