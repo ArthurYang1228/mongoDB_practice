@@ -7,10 +7,7 @@ def amount_pathfinding(amount_list: list, target: int, skip: int=0) -> list:
 
         if amount <= target:
             origin_index = target-amount
-            if origin_index not in path_list:
-                path_list[origin_index] = set([1])
-            else:
-                path_list[origin_index].add(1)
+
 
             path_index_list = list(path_list)
             path_index_list.sort()
@@ -21,11 +18,17 @@ def amount_pathfinding(amount_list: list, target: int, skip: int=0) -> list:
                     index = path_index-amount
 
                     for step_num in path_list[path_index]:
-                        if origin_index == path_index and step_num==1:
-                            continue
+                        # if origin_index == path_index and step_num==1:
+                        #     continue
                         if index not in path_list:
                             path_list[index] = set([])
                         path_list[index].add(step_num+1)
+
+            if origin_index not in path_list:
+                path_list[origin_index] = set([1])
+            else:
+                path_list[origin_index].add(1)
+
     if not 0 in path_list:
         return []
     else:

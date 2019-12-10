@@ -8,10 +8,10 @@ from grade.amount_stat import amount_pathfinding
 def hello_world(request):
     if request.GET:
         Amount = int(request.GET.get('Amount', ''))
-        A = request.GET.get('A', '')
-        B = request.GET.get('B', '')
-        C = request.GET.get('C', '')
-        D = request.GET.get('D', '')
+        A = request.GET.get('A', '0') or 0
+        B = request.GET.get('B', '0') or 0
+        C = request.GET.get('C', '0') or 0
+        D = request.GET.get('D', '0') or 0
         skip_dict = {"A":int(A), "B":int(B), "C":int(C), "D":int(D)}  #check
 
         client = pymongo.MongoClient(host='localhost', port=27017)
@@ -31,6 +31,8 @@ def hello_world(request):
 
             tem_amount_list.append(r['amount'])
 
+        tem_rst = amount_pathfinding(tem_amount_list, Amount, skip_dict[todo_category])
+        grade_rst[todo_category] = tem_rst
 
         return JsonResponse(grade_rst)
     else:
